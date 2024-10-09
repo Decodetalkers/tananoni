@@ -106,9 +106,9 @@ export class WebPageUnit {
 export class Route {
   subroutes: Route[] = [];
   webpages: WebPageUnit[] = [];
-  base_routine: string;
-  constructor(base_routine: string) {
-    this.base_routine = base_routine;
+  base_route: string;
+  constructor(base_route: string) {
+    this.base_route = base_route;
   }
   append_webpage(webpage: WebPageUnit): Route {
     this.webpages.push(webpage);
@@ -167,7 +167,7 @@ async function generate_website(
   logLevel: esbuild.LogLevel | undefined,
 ) {
   let outputDir = baseOutputDir;
-  let subdir = route.base_routine;
+  let subdir = route.base_route;
   if (parent) {
     subdir = join(parent, subdir);
   }
@@ -195,7 +195,7 @@ async function generate_website(
   }
   for (const subroute of route.subroutes) {
     await generate_website(
-      route.base_routine,
+      route.base_route,
       subroute,
       jsxImportSource,
       logLevel,
