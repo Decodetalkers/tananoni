@@ -2,12 +2,13 @@ import * as esbuild from "esbuild";
 import { denoPlugins } from "@luca/esbuild-deno-loader";
 import { ensureDir, existsSync } from "@std/fs";
 import { join, resolve } from "@std/path";
-enum MountType {
+export enum MountType {
   Main,
   Header,
+  Div,
 }
 
-type MountInfo = {
+export type MountInfo = {
   type: MountType;
   id: string;
 };
@@ -38,6 +39,10 @@ export class WebPageUnit {
     this.viewport = viewport_setting;
     return this;
   }
+  with_htmlName(htmlName: string) {
+    this.htmlName_ = htmlName;
+    return this;
+  }
   with_title(title: string) {
     this.title = title;
     return this;
@@ -48,9 +53,9 @@ export class WebPageUnit {
   }
   constructor(
     entryPoint: string,
-    route: string | undefined = undefined,
     mountpoints: MountInfo[],
     scripts: string[],
+    route: string | undefined = undefined,
   ) {
     this.entryPoint_ = entryPoint;
     this.htmlName_ = route || this.htmlName_;
@@ -70,6 +75,9 @@ export class WebPageUnit {
         case MountType.Header:
           output.push(`<head id="${mountpoint.id}"></head>`);
           break;
+        case MountType.Div:
+          output.push(`<div id="${mountpoint.id}"></div>`);
+          break;
       }
     }
     for (const script of this.scripts) {
@@ -79,8 +87,7 @@ export class WebPageUnit {
     return output.join("\n");
   }
   genhtml(): string {
-    return `
-<!DOCTYPE html>
+    return `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -88,14 +95,11 @@ export class WebPageUnit {
     <title>${this.title}</title>
     <link rel="icon" type="image/x-icon" href="${this.icon}" />
   </head>
-  <style>
-    ${this.css}
-  </style>
+  <style>${this.css}</style>
   <body>
     ${this.genBody()}
   </body>
-</html>
-    `;
+</html>`;
   }
 }
 
@@ -156,7 +160,7 @@ const esbuildPlugins = [
   ),
 ];
 
-export async function generate_website(
+async function generate_website(
   parent: string | undefined,
   route: Route,
   jsxImportSource: string | undefined,

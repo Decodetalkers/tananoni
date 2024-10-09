@@ -1,0 +1,32 @@
+{
+  "imports": {
+    "styled-components-deno": "jsr:@nobody/styled-components-deno@^0.8.2",
+    "@std/async": "jsr:@std/async@^1.0.3",
+    "@std/cli": "jsr:@std/cli@^1.0.3",
+    "@std/fs": "jsr:@std/fs@^1.0.1",
+    "@std/http": "jsr:@std/http@^1.0.3",
+    "@std/path": "jsr:@std/path@^1.0.2",
+    "esbuild": "npm:esbuild@^0.23.1",
+    "esbuild_deno_loader": "jsr:@luca/esbuild-deno-loader@^0.10.3",
+    "preact": "npm:preact@^10.23.2",
+    "react": "npm:react@^18.3.1",
+    "tananoni": "../mod.ts",
+    "~/functions/": "./functions/"
+  },
+  "tasks": {
+    "start": "deno run -A build.ts",
+    "release": "deno run -A build.ts --release"
+  },
+  "lint": {
+    "exclude": [
+      "dist",
+      "static"
+    ]
+  },
+  "fmt": {
+    "exclude": [
+      "dist",
+      "static"
+    ]
+  }
+}

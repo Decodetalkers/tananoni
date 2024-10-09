@@ -1,5 +1,8 @@
 {
-  "name": "tananoni",
+  "name": "@nobody/tananoni",
+  "workspace": [
+    "./example"
+  ],
   "version": "0.1.0",
   "exports": "./mod.ts",
   "tasks": {
@@ -12,5 +15,16 @@
     "@std/fs": "jsr:@std/fs@^1.0.4",
     "@std/path": "jsr:@std/path@^1.0.6",
     "esbuild": "npm:esbuild@^0.24.0"
+  },
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "jsxImportSource": "npm:preact",
+    "lib": [
+      "deno.ns",
+      "dom",
+      "dom.iterable",
+      "dom.asynciterable",
+      "esnext"
+    ]
   }
 }
