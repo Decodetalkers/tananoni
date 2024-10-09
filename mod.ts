@@ -35,19 +35,19 @@ export class WebPageUnit {
     return this.entryPoint_;
   }
 
-  with_viewport(viewport_setting: string) {
+  with_viewport(viewport_setting: string): WebPageUnit {
     this.viewport = viewport_setting;
     return this;
   }
-  with_htmlName(htmlName: string) {
+  with_htmlName(htmlName: string): WebPageUnit {
     this.htmlName_ = htmlName;
     return this;
   }
-  with_title(title: string) {
+  with_title(title: string): WebPageUnit {
     this.title = title;
     return this;
   }
-  with_globalcss(css: string) {
+  with_globalcss(css: string): WebPageUnit {
     this.css = css;
     return this;
   }
