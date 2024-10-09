@@ -1,6 +1,6 @@
 import * as esbuild from "esbuild";
 import { denoPlugins } from "@luca/esbuild-deno-loader";
-import { ensureDir, existsSync } from "@std/fs";
+import { copySync, ensureDir, existsSync } from "@std/fs";
 import { join, resolve } from "@std/path";
 export enum MountType {
   Main,
@@ -107,6 +107,7 @@ export class Route {
   subroutes: Route[] = [];
   webpages: WebPageUnit[] = [];
   base_route: string;
+  asserts: string[] = [];
   constructor(base_route: string) {
     this.base_route = base_route;
   }
@@ -114,8 +115,12 @@ export class Route {
     this.webpages.push(webpage);
     return this;
   }
-  append_routine(route: Route): Route {
+  append_route(route: Route): Route {
     this.subroutes.push(route);
+    return this;
+  }
+  append_assert(assert: string): Route {
+    this.asserts.push(assert);
     return this;
   }
 }
@@ -123,10 +128,12 @@ export class Route {
 export class GenWebsite {
   jsrImportSource?: string | undefined;
   logLevel?: esbuild.LogLevel | undefined;
+
   withImportSource(importSource: string): GenWebsite {
     this.jsrImportSource = importSource;
     return this;
   }
+
   withLogLevel(logLevel: esbuild.LogLevel): GenWebsite {
     this.logLevel = logLevel;
     return this;
@@ -160,6 +167,8 @@ const esbuildPlugins = [
   ),
 ];
 
+const copySyncOption = { overwrite: true };
+
 async function generate_website(
   parent: string | undefined,
   route: Route,
@@ -192,6 +201,9 @@ async function generate_website(
     };
     esBuildOptions.plugins = esbuildPlugins;
     await esbuild.build({ ...esBuildOptions });
+  }
+  for (const assert of route.asserts) {
+    copySync(assert, join(outputDir, assert), copySyncOption);
   }
   for (const subroute of route.subroutes) {
     await generate_website(

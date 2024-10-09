@@ -1,6 +1,7 @@
 import { GenWebsite, MountType, Route, WebPageUnit } from "tananoni";
 
 const route_2 = new Route("under")
+  .append_assert("favicon.ico")
   .append_webpage(
     new WebPageUnit(
       "src/main.tsx",
@@ -19,6 +20,7 @@ const route_2 = new Route("under")
       .with_htmlName("hello.html"),
   );
 const route = new Route("example")
+  .append_assert("favicon.ico")
   .append_webpage(
     new WebPageUnit(
       "src/main.tsx",
@@ -36,7 +38,7 @@ const route = new Route("example")
       .with_title("hello")
       .with_htmlName("hello.html"),
   )
-  .append_routine(route_2);
+  .append_route(route_2);
 const webgen = new GenWebsite()
   .withLogLevel("info")
   .withImportSource("npm:preact");
