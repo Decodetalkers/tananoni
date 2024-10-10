@@ -27,6 +27,10 @@ export class WebPageUnit {
     return this;
   }
 
+  then(fn: (arg: WebPageUnit) => WebPageUnit): WebPageUnit {
+    return fn(this);
+  }
+
   get htmlName(): string {
     return this.htmlName_;
   }
@@ -149,6 +153,9 @@ export class Route {
   append_assert(assert: Assert): Route {
     this.asserts.push(assert);
     return this;
+  }
+  then(fn: (arg: Route) => Route): Route {
+    return fn(this);
   }
 }
 
