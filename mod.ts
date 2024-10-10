@@ -1,7 +1,7 @@
 import * as esbuild from "esbuild";
 import { denoPlugins } from "@luca/esbuild-deno-loader";
 import { copySync, ensureDir, existsSync } from "@std/fs";
-import { join, resolve } from "@std/path";
+import { basename, join, resolve } from "@std/path";
 export enum MountType {
   Main,
   Header,
@@ -230,7 +230,7 @@ async function generate_website(
     await esbuild.build({ ...esBuildOptions });
   }
   for (const assert of route.asserts) {
-    copySync(assert, join(outputDir, assert), copySyncOption);
+    copySync(assert, join(outputDir, basename(assert)), copySyncOption);
   }
   for (const subroute of route.subroutes) {
     await generate_website(
