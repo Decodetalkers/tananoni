@@ -13,6 +13,11 @@ export type LinkInfo = {
   href: string;
 };
 
+export type Script = {
+  type?: "normal" | "module";
+  src: string;
+};
+
 export class WebPageUnit {
   private title = "";
   private css = "";
@@ -21,7 +26,7 @@ export class WebPageUnit {
   private htmlName_ = "index.html";
   private entryPoint_: string;
   private mountpoints: MountInfo[];
-  private scripts: string[];
+  private scripts: Script[];
   with_linkInfos(linkInfos: LinkInfo[]): WebPageUnit {
     this.linkInfos = linkInfos;
     return this;
@@ -59,7 +64,7 @@ export class WebPageUnit {
   constructor(
     entryPoint: string,
     mountpoints: MountInfo[],
-    scripts: string[],
+    scripts: Script[],
     route: string | undefined = undefined,
   ) {
     this.entryPoint_ = entryPoint;
@@ -105,7 +110,15 @@ export class WebPageUnit {
       }
     }
     for (const script of this.scripts) {
-      output.push(`<script src="${script}"></script>`);
+      switch (script.type) {
+        case "module":
+          output.push(`<script type="module" src="${script}"></script>`);
+          break;
+        case "normal":
+        case undefined:
+          output.push(`<script src="${script}"></script>`);
+          break;
+      }
     }
 
     return output.join("\n");

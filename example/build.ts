@@ -6,7 +6,7 @@ const route_2 = new Route("under")
     new WebPageUnit(
       "src/main.tsx",
       [{ type: "main", id: "mount" }],
-      ["main.js"],
+      [{ src: "main.js" }],
     )
       .with_title("index")
       .with_linkInfos([
@@ -20,7 +20,7 @@ const route_2 = new Route("under")
     new WebPageUnit(
       "./src/hello.tsx",
       [{ type: "main", id: "mount" }],
-      ["hello.js"],
+      [{ src: "hello.js" }],
     )
       .with_title("hello")
       .with_htmlName("hello.html")
@@ -37,7 +37,7 @@ const route = new Route("example")
     new WebPageUnit(
       "src/main.tsx",
       [{ type: "main", id: "mount" }],
-      ["main.js"],
+      [{ src: "main.js" }],
     )
       .with_title("index")
       .with_linkInfos([
@@ -51,7 +51,7 @@ const route = new Route("example")
     new WebPageUnit(
       "./src/hello.tsx",
       [{ type: "main", id: "mount" }],
-      ["hello.js"],
+      [{ src: "hello.js" }],
     )
       .with_title("hello")
       .with_linkInfos([
