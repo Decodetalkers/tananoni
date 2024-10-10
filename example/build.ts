@@ -1,11 +1,11 @@
-import { GenWebsite, MountType, Route, WebPageUnit } from "tananoni";
+import { GenWebsite, Route, WebPageUnit } from "tananoni";
 
 const route_2 = new Route("under")
   .append_assert("favicon.ico")
   .append_webpage(
     new WebPageUnit(
       "src/main.tsx",
-      [{ type: MountType.Main, id: "mount" }],
+      [{ type: "main", id: "mount" }],
       ["main.js"],
     )
       .with_title("index")
@@ -19,7 +19,7 @@ const route_2 = new Route("under")
   .append_webpage(
     new WebPageUnit(
       "./src/hello.tsx",
-      [{ type: MountType.Main, id: "mount" }],
+      [{ type: "main", id: "mount" }],
       ["hello.js"],
     )
       .with_title("hello")
@@ -36,7 +36,7 @@ const route = new Route("example")
   .append_webpage(
     new WebPageUnit(
       "src/main.tsx",
-      [{ type: MountType.Main, id: "mount" }],
+      [{ type: "main", id: "mount" }],
       ["main.js"],
     )
       .with_title("index")
@@ -50,7 +50,7 @@ const route = new Route("example")
   .append_webpage(
     new WebPageUnit(
       "./src/hello.tsx",
-      [{ type: MountType.Main, id: "mount" }],
+      [{ type: "main", id: "mount" }],
       ["hello.js"],
     )
       .with_title("hello")

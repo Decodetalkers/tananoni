@@ -2,14 +2,9 @@ import * as esbuild from "esbuild";
 import { denoPlugins } from "@luca/esbuild-deno-loader";
 import { copySync, ensureDir, existsSync } from "@std/fs";
 import { basename, join, resolve } from "@std/path";
-export enum MountType {
-  Main,
-  Header,
-  Div,
-}
 
 export type MountInfo = {
-  type: MountType;
+  type: "div" | "main" | "header";
   id: string;
 };
 
@@ -94,13 +89,13 @@ export class WebPageUnit {
 
     for (const mountpoint of this.mountpoints) {
       switch (mountpoint.type) {
-        case MountType.Main:
+        case "main":
           output.push(`<main id="${mountpoint.id}"></main>`);
           break;
-        case MountType.Header:
-          output.push(`<head id="${mountpoint.id}"></head>`);
+        case "header":
+          output.push(`<header id="${mountpoint.id}"></head>`);
           break;
-        case MountType.Div:
+        case "div":
           output.push(`<div id="${mountpoint.id}"></div>`);
           break;
       }
