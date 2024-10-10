@@ -112,11 +112,11 @@ export class WebPageUnit {
     for (const script of this.scripts) {
       switch (script.type) {
         case "module":
-          output.push(`<script type="module" src="${script}"></script>`);
+          output.push(`<script type="module" src="${script.src}"></script>`);
           break;
         case "normal":
         case undefined:
-          output.push(`<script src="${script}"></script>`);
+          output.push(`<script src="${script.src}"></script>`);
           break;
       }
     }
