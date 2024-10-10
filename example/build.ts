@@ -1,7 +1,7 @@
 import { GenWebsite, Route, WebPageUnit } from "tananoni";
 
 const route_2 = new Route("under")
-  .append_assert("favicon.ico")
+  .append_assert({ path: "favicon.ico" })
   .append_webpage(
     new WebPageUnit(
       "src/main.tsx",
@@ -32,7 +32,7 @@ const route_2 = new Route("under")
       ]),
   );
 const route = new Route("example")
-  .append_assert("favicon.ico")
+  .append_assert({ path: "favicon.ico" })
   .append_webpage(
     new WebPageUnit(
       "src/main.tsx",

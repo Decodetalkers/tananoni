@@ -125,11 +125,16 @@ export class WebPageUnit {
   }
 }
 
+export type Assert = {
+  path: string;
+  alias?: string;
+};
+
 export class Route {
   subroutes: Route[] = [];
   webpages: WebPageUnit[] = [];
   base_route: string;
-  asserts: string[] = [];
+  asserts: Assert[] = [];
   constructor(base_route: string) {
     this.base_route = base_route;
   }
@@ -141,7 +146,7 @@ export class Route {
     this.subroutes.push(route);
     return this;
   }
-  append_assert(assert: string): Route {
+  append_assert(assert: Assert): Route {
     this.asserts.push(assert);
     return this;
   }
@@ -225,7 +230,9 @@ async function generate_website(
     await esbuild.build({ ...esBuildOptions });
   }
   for (const assert of route.asserts) {
-    copySync(assert, join(outputDir, basename(assert)), copySyncOption);
+    const assertPath = assert.path;
+    const targetPath = assert.alias || basename(assertPath);
+    copySync(assertPath, join(outputDir, targetPath), copySyncOption);
   }
   for (const subroute of route.subroutes) {
     await generate_website(
