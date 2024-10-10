@@ -20,7 +20,7 @@ export type Script = {
 
 export class WebPageUnit {
   private title = "";
-  private css = "";
+  private css: string | undefined;
   private viewport = "width=device-width, initial-scale=1.0";
   private linkInfos: LinkInfo[] = [];
   private htmlName_ = "index.html";
@@ -123,6 +123,13 @@ export class WebPageUnit {
 
     return output.join("\n");
   }
+
+  private genCSS(): string {
+    if (this.css) {
+      return `<style>${this.css}</style>`;
+    }
+    return "";
+  }
   genhtml(): string {
     let template = `<!DOCTYPE html>
 <html lang="en">
@@ -132,7 +139,7 @@ export class WebPageUnit {
     <title>${this.title}</title>
     ${this.genLinkInfos()}
   </head>
-  <style>${this.css}</style>
+  ${this.genCSS()}
   <body>
     ${this.genBody()}
   </body>
