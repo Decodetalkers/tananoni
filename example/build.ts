@@ -8,7 +8,13 @@ const route_2 = new Route("under")
       [{ type: MountType.Main, id: "mount" }],
       ["main.js"],
     )
-      .with_title("index"),
+      .with_title("index")
+      .with_linkInfos([
+        {
+          type: "icon",
+          href: "favicon.icon",
+        },
+      ]),
   )
   .append_webpage(
     new WebPageUnit(
@@ -17,7 +23,13 @@ const route_2 = new Route("under")
       ["hello.js"],
     )
       .with_title("hello")
-      .with_htmlName("hello.html"),
+      .with_htmlName("hello.html")
+      .with_linkInfos([
+        {
+          type: "icon",
+          href: "favicon.icon",
+        },
+      ]),
   );
 const route = new Route("example")
   .append_assert("favicon.ico")
@@ -27,7 +39,13 @@ const route = new Route("example")
       [{ type: MountType.Main, id: "mount" }],
       ["main.js"],
     )
-      .with_title("index"),
+      .with_title("index")
+      .with_linkInfos([
+        {
+          type: "icon",
+          href: "favicon.icon",
+        },
+      ]),
   )
   .append_webpage(
     new WebPageUnit(
@@ -36,6 +54,12 @@ const route = new Route("example")
       ["hello.js"],
     )
       .with_title("hello")
+      .with_linkInfos([
+        {
+          type: "icon",
+          href: "favicon.icon",
+        },
+      ])
       .with_htmlName("hello.html"),
   )
   .append_route(route_2);

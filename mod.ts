@@ -13,17 +13,22 @@ export type MountInfo = {
   id: string;
 };
 
+export type LinkInfo = {
+  type: "icon" | "stylesheet";
+  href: string;
+};
+
 export class WebPageUnit {
   private title = "";
   private css = "";
   private viewport = "width=device-width, initial-scale=1.0";
-  private icon = "favicon.ico";
+  private linkInfos: LinkInfo[] = [];
   private htmlName_ = "index.html";
   private entryPoint_: string;
   private mountpoints: MountInfo[];
   private scripts: string[];
-  with_icon(icon: string): WebPageUnit {
-    this.icon = icon;
+  with_linkInfos(linkInfos: LinkInfo[]): WebPageUnit {
+    this.linkInfos = linkInfos;
     return this;
   }
 
@@ -51,6 +56,7 @@ export class WebPageUnit {
     this.css = css;
     return this;
   }
+
   constructor(
     entryPoint: string,
     mountpoints: MountInfo[],
@@ -64,6 +70,25 @@ export class WebPageUnit {
     return this;
   }
 
+  private genLinkInfos(): string {
+    const output: string[] = [];
+    for (const linkInfo of this.linkInfos) {
+      switch (linkInfo.type) {
+        case "icon":
+          output.push(
+            `<link rel="icon" type="image/x-icon" href="${linkInfo.href}" />`,
+          );
+          break;
+
+        case "stylesheet":
+          output.push(
+            `<link rel="stylesheet" href="${linkInfo.href}" />`,
+          );
+          break;
+      }
+    }
+    return output.join("\n");
+  }
   private genBody(): string {
     const output: string[] = [];
 
@@ -87,19 +112,21 @@ export class WebPageUnit {
     return output.join("\n");
   }
   genhtml(): string {
-    return `<!DOCTYPE html>
+    let template = `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="${this.viewport}" />
     <title>${this.title}</title>
-    <link rel="icon" type="image/x-icon" href="${this.icon}" />
+    ${this.genLinkInfos()}
   </head>
   <style>${this.css}</style>
   <body>
     ${this.genBody()}
   </body>
 </html>`;
+    template = template.replaceAll("\n", "");
+    return template;
   }
 }
 
