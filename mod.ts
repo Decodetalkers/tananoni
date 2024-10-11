@@ -102,7 +102,7 @@ export class WebPageUnit {
           output.push(`<main id="${mountpoint.id}"></main>`);
           break;
         case "header":
-          output.push(`<header id="${mountpoint.id}"></head>`);
+          output.push(`<header id="${mountpoint.id}"></header>`);
           break;
         case "div":
           output.push(`<div id="${mountpoint.id}"></div>`);
@@ -133,16 +133,16 @@ export class WebPageUnit {
   genhtml(): string {
     let template = `<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="${this.viewport}" />
-    <title>${this.title}</title>
-    ${this.genLinkInfos()}
-  </head>
-  ${this.genCSS()}
-  <body>
-    ${this.genBody()}
-  </body>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="${this.viewport}" />
+<title>${this.title}</title>
+${this.genLinkInfos()}
+</head>
+${this.genCSS()}
+<body>
+${this.genBody()}
+</body>
 </html>`;
     template = template.replaceAll("\n", "");
     return template;
