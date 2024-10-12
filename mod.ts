@@ -82,6 +82,7 @@ import * as esbuild from "esbuild";
 import { denoPlugins } from "@luca/esbuild-deno-loader";
 import { copySync, ensureDir, existsSync } from "@std/fs";
 import { basename, join, resolve } from "@std/path";
+import { assert } from "@std/assert";
 
 /**
  * Describe the mount point in html
@@ -306,15 +307,17 @@ export type Assert = {
 export class Route {
   subroutes: Route[] = [];
   webpages: WebPageUnit[] = [];
-  base_route: string;
+  base_route: string | undefined;
   asserts: Assert[] = [];
   /**
    * construct with default path. for the top of the route, you can set it to
    * `debug` or `release`
+   * the start route can be undefined
    */
-  constructor(base_route: string) {
+  constructor(base_route?: string) {
     this.base_route = base_route;
   }
+
   append_webpage(webpage: WebPageUnit): Route {
     this.webpages.push(webpage);
     return this;
@@ -325,6 +328,7 @@ export class Route {
    * then the real route of subroute will be `debug/doc`
    */
   append_route(route: Route): Route {
+    assert(route.base_route);
     this.subroutes.push(route);
     return this;
   }
@@ -410,11 +414,13 @@ async function generate_website(
   logLevel: esbuild.LogLevel | undefined,
 ) {
   let outputDir = baseOutputDir;
-  let subdir = route.base_route;
-  if (parent) {
-    subdir = join(parent, subdir);
+  if (route.base_route) {
+    let subdir = route.base_route;
+    if (parent) {
+      subdir = join(parent, subdir);
+    }
+    outputDir = join(outputDir, subdir);
   }
-  outputDir = join(outputDir, subdir);
   await ensureDir(outputDir);
   for (const unit of route.webpages) {
     const html = unit.htmlName;

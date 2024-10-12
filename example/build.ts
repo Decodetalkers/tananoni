@@ -31,7 +31,7 @@ const route_2 = new Route("under")
         },
       ]),
   );
-const route = new Route("example")
+const route = new Route()
   .append_assert({ path: "favicon.ico" })
   .append_webpage(
     new WebPageUnit(

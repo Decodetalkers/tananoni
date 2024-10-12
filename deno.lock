@@ -3,8 +3,7 @@
   "specifiers": {
     "jsr:@luca/esbuild-deno-loader@~0.10.3": "0.10.3",
     "jsr:@nobody/styled-components-deno@~0.8.2": "0.8.2",
-    "jsr:@std/assert@*": "1.0.6",
-    "jsr:@std/assert@1": "1.0.6",
+    "jsr:@std/assert@^1.0.6": "1.0.6",
     "jsr:@std/assert@~0.213.1": "0.213.1",
     "jsr:@std/encoding@0.213": "0.213.1",
     "jsr:@std/fs@^1.0.4": "1.0.4",
@@ -301,7 +300,7 @@
   "workspace": {
     "dependencies": [
       "jsr:@luca/esbuild-deno-loader@~0.10.3",
-      "jsr:@std/assert@1",
+      "jsr:@std/assert@^1.0.6",
       "jsr:@std/fs@^1.0.4",
       "jsr:@std/path@^1.0.6",
       "npm:esbuild@0.24"
