@@ -1,18 +1,111 @@
+/**
+ * @module
+ * tananoni is a simple website generator with esbuild
+ *
+ * @example
+ *
+ * ```typescript
+ * import { GenWebsite, Route, WebPageUnit } from "tananoni";
+ *
+ * const route_2 = new Route("under")
+ *   .append_assert({ path: "favicon.ico" })
+ *   .append_webpage(
+ *     new WebPageUnit(
+ *       "src/main.tsx",
+ *       [{ type: "main", id: "mount" }],
+ *       [{ src: "main.js" }],
+ *     )
+ *       .with_title("index")
+ *       .with_linkInfos([
+ *         {
+ *           type: "icon",
+ *           href: "favicon.icon",
+ *         },
+ *       ]),
+ *   )
+ *   .append_webpage(
+ *     new WebPageUnit(
+ *       "./src/hello.tsx",
+ *       [{ type: "main", id: "mount" }],
+ *       [{ src: "hello.js" }],
+ *     )
+ *       .with_title("hello")
+ *       .with_htmlName("hello.html")
+ *       .with_linkInfos([
+ *         {
+ *           type: "icon",
+ *           href: "favicon.icon",
+ *         },
+ *       ]),
+ *   );
+ * const route = new Route("example")
+ *   .append_assert({ path: "favicon.ico" })
+ *   .append_webpage(
+ *     new WebPageUnit(
+ *       "src/main.tsx",
+ *       [{ type: "main", id: "mount" }],
+ *       [{ src: "main.js" }],
+ *     )
+ *       .with_title("index")
+ *       .with_linkInfos([
+ *         {
+ *           type: "icon",
+ *           href: "favicon.icon",
+ *         },
+ *       ]),
+ *   )
+ *   .append_webpage(
+ *     new WebPageUnit(
+ *       "./src/hello.tsx",
+ *       [{ type: "main", id: "mount" }],
+ *       [{ src: "hello.js" }],
+ *     )
+ *       .with_title("hello")
+ *       .with_linkInfos([
+ *         {
+ *           type: "icon",
+ *           href: "favicon.icon",
+ *         },
+ *       ])
+ *       .with_htmlName("hello.html"),
+ *   )
+ *   .append_route(route_2);
+ * const webgen = new GenWebsite()
+ *   .withLogLevel("info")
+ *   .withImportSource("npm:preact");
+ *
+ * await webgen.generate_website(route);
+ * ```
+ */
+
 import * as esbuild from "esbuild";
 import { denoPlugins } from "@luca/esbuild-deno-loader";
 import { copySync, ensureDir, existsSync } from "@std/fs";
 import { basename, join, resolve } from "@std/path";
 
+/**
+ * Describe the mount point in html
+ * The mount point can be "div", "main" or "header"
+ * You need to set the mount id
+ */
 export type MountInfo = {
   type: "div" | "main" | "header";
   id: string;
 };
 
+/**
+ * Describe the link part in html
+ * You can use it to set the
+ */
 export type LinkInfo = {
   type: "icon" | "stylesheet";
   href: string;
 };
 
+/**
+ * Descript the script part of the html
+ * You can set the type to "module" to support run async
+ */
 export type Script = {
   type?: "normal" | "module";
   src: string;
@@ -32,39 +125,77 @@ export class WebPageUnit {
     return this;
   }
 
+  /**
+   * This function will pass the WebPageUnit itself as param, then you can use a closure
+   * to handle the WebPageUnit
+   */
   then(fn: (arg: WebPageUnit) => WebPageUnit): WebPageUnit {
     return fn(this);
   }
 
+  /**
+   * Return the current html name, for example, index.html
+   */
   get htmlName(): string {
     return this.htmlName_;
   }
 
+  /**
+   * The entryPoint of esbuild, like `src/main.tsx`.
+   * That means the compile source
+   */
   get entryPoint(): string {
     return this.entryPoint_;
   }
 
+  /**
+   * Viewport part of html
+   */
   with_viewport(viewport_setting: string): WebPageUnit {
     this.viewport = viewport_setting;
     return this;
   }
+
+  /**
+   * With this function to set the target htmlName
+   */
   with_htmlName(htmlName: string): WebPageUnit {
     this.htmlName_ = htmlName;
     return this;
   }
+
+  /**
+   * Set the page title
+   */
   with_title(title: string): WebPageUnit {
     this.title = title;
     return this;
   }
+
+  /**
+   * Set the part of <style/> in html
+   */
   with_globalcss(css: string): WebPageUnit {
     this.css = css;
     return this;
   }
 
   constructor(
+    /**
+     * the compile source
+     */
     entryPoint: string,
+    /**
+     * Where to mount
+     */
     mountpoints: MountInfo[],
+    /**
+     * mount script
+     */
     scripts: Script[],
+    /**
+     * The htmlName, for example `index.html`
+     */
     route: string | undefined = undefined,
   ) {
     this.entryPoint_ = entryPoint;
@@ -93,6 +224,7 @@ export class WebPageUnit {
     }
     return output.join("\n");
   }
+
   private genBody(): string {
     const output: string[] = [];
 
@@ -130,6 +262,10 @@ export class WebPageUnit {
     }
     return "";
   }
+
+  /**
+   * Return the current result of the html
+   */
   genhtml(): string {
     let template = `<!DOCTYPE html>
 <html lang="en">
@@ -149,16 +285,33 @@ ${this.genBody()}
   }
 }
 
+/**
+ * Static assert. During building, the assert will be defaultedly
+ * copy to the target place of the html path.
+ */
 export type Assert = {
   path: string;
+  /**
+   * Set the alias path.
+   * For example, the route is /dist/debug/ and the path is `static`, by default,
+   * the assert will be placed to /dist/debug/static, if set alias to `/static/icon`,
+   * it will be placed to /dist/debug/static/icon
+   */
   alias?: string;
 };
 
+/**
+ * Describe the structure of the webpages.
+ */
 export class Route {
   subroutes: Route[] = [];
   webpages: WebPageUnit[] = [];
   base_route: string;
   asserts: Assert[] = [];
+  /**
+   * construct with default path. for the top of the route, you can set it to
+   * `debug` or `release`
+   */
   constructor(base_route: string) {
     this.base_route = base_route;
   }
@@ -166,38 +319,65 @@ export class Route {
     this.webpages.push(webpage);
     return this;
   }
+
+  /**
+   * Add a subroute. For example, the subroute is doc, and the parent one is `debug`,
+   * then the real route of subroute will be `debug/doc`
+   */
   append_route(route: Route): Route {
     this.subroutes.push(route);
     return this;
   }
+
+  /**
+   * Append the assert(s) of current route. The assert(s) will copySync to the path under
+   * the dir of current route.
+   */
   append_assert(assert: Assert): Route {
     this.asserts.push(assert);
     return this;
   }
+
+  /**
+   * This function will pass the Route itself as param, then you can use a closure
+   * to handle the Route
+   */
   then(fn: (arg: Route) => Route): Route {
     return fn(this);
   }
 }
 
+/**
+ * GenWebsite class, directly wrap the esbuild
+ */
 export class GenWebsite {
-  jsrImportSource?: string | undefined;
+  jsxImportSource?: string | undefined;
   logLevel?: esbuild.LogLevel | undefined;
 
+  /**
+   * jsxImportSource in esbuild
+   */
   withImportSource(importSource: string): GenWebsite {
-    this.jsrImportSource = importSource;
+    this.jsxImportSource = importSource;
     return this;
   }
 
+  /**
+   * Set the logLevel of esbuild
+   */
   withLogLevel(logLevel: esbuild.LogLevel): GenWebsite {
     this.logLevel = logLevel;
     return this;
   }
 
+  /**
+   * Start generate the website
+   */
   async generate_website(route: Route) {
     await generate_website(
       undefined,
       route,
-      this.jsrImportSource,
+      this.jsxImportSource,
       this.logLevel,
     );
   }
