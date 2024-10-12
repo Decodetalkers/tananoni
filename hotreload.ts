@@ -58,6 +58,7 @@ export async function watchChanges(
       continue;
     }
 
+    let should_fresh = false;
     for (const pa of event.paths) {
       const absolutePath = resolve(pa);
       const pathParts = absolutePath.split(SEPARATOR); // Use the platform-specific separator
@@ -72,14 +73,10 @@ export async function watchChanges(
       if (!watchedFileTypes.includes(paExt)) {
         continue;
       }
-      if (
-        pa.includes("./dist") || pa.includes("./build.ts") ||
-        (pa.endsWith(".git") || pa.includes(".git/")) ||
-        (!pa.endsWith("ts") && !pa.endsWith("tsx") && !pa.endsWith("css") &&
-          !pa.endsWith("js") && !pa.endsWith("jsx") && !pa.endsWith("md"))
-      ) {
-        continue;
-      }
+      should_fresh = true;
+    }
+    if (!should_fresh) {
+      continue;
     }
 
     // Make sure the file is already be modified
