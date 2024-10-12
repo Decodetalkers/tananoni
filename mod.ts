@@ -187,7 +187,7 @@ export class WebPageUnit {
     return this;
   }
   /**
-   * entryPoin: The compile source
+   * entryPoint: The compile source
    * mountpoints:  Where to mount
    * scripts: The Binded scripts
    * route: default is `index.html`
