@@ -83,6 +83,14 @@ import { denoPlugins } from "@luca/esbuild-deno-loader";
 import { copySync, ensureDir, existsSync } from "@std/fs";
 import { basename, join, resolve } from "@std/path";
 import { assert } from "@std/assert";
+import {
+  hotReloadScript,
+  refreshMiddleware,
+  watchChanges,
+  type WatchInfo,
+} from "./hotreload.ts";
+
+export { refreshMiddleware, watchChanges, type WatchInfo };
 
 /**
  * Describe the mount point in html
@@ -130,6 +138,15 @@ export class WebPageUnit {
    */
   with_linkInfos(linkInfos: LinkInfo[]): WebPageUnit {
     this.linkInfos = linkInfos;
+    return this;
+  }
+
+  /**
+   * Add another script named hot_reload.js
+   * This js will use websocket to do update
+   */
+  with_hotReload(): WebPageUnit {
+    this.scripts.push({ src: "hot_reload.js" });
     return this;
   }
 
@@ -309,6 +326,7 @@ export class Route {
   webpages: WebPageUnit[] = [];
   base_route: string | undefined;
   asserts: Assert[] = [];
+  hot_reload: boolean = false;
   /**
    * construct with default path. for the top of the route, you can set it to
    * `debug` or `release`
@@ -318,6 +336,9 @@ export class Route {
     this.base_route = base_route;
   }
 
+  /**
+   * Append new webpage to the route
+   */
   append_webpage(webpage: WebPageUnit): Route {
     this.webpages.push(webpage);
     return this;
@@ -339,6 +360,15 @@ export class Route {
    */
   append_assert(assert: Assert): Route {
     this.asserts.push(assert);
+    return this;
+  }
+
+  /**
+   * if be set to true, then under this route, there will be generate a file named hot_reload.js
+   * This js is used to hot_reload
+   */
+  with_hotReload(hot_reload: boolean): Route {
+    this.hot_reload = hot_reload;
     return this;
   }
 
@@ -422,6 +452,10 @@ async function generate_website(
     outputDir = join(outputDir, subdir);
   }
   await ensureDir(outputDir);
+  if (route.hot_reload) {
+    const reloadJs = join(outputDir, "hot_reload.js");
+    Deno.writeTextFile(reloadJs, hotReloadScript);
+  }
   for (const unit of route.webpages) {
     const html = unit.htmlName;
     const text = unit.genhtml();
