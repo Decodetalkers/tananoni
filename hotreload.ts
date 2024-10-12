@@ -54,7 +54,7 @@ export async function watchChanges(
     if (during_wait) {
       continue;
     }
-    if (["any", "access"].includes(event.kind)) {
+    if (!["modified", "remove", "create", "rename"].includes(event.kind)) {
       continue;
     }
 
