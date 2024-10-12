@@ -30,7 +30,7 @@ export function refreshMiddleware(req: Request): Response | null {
 /**
  * watchedDir: the dir be watched,
  * excludes: dir or file not needed
- * watchedFileTypes: like ts, tsx
+ * watchedFileTypes: like .ts, .tsx
  * fallback: async function, when refresh, regenerate the target
  */
 export type WatchInfo = {

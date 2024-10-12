@@ -95,7 +95,7 @@ async function fsWatch() {
 
 await watchChanges({
   watchedDir: "./",
-  watchedFileTypes: ["ts", "tsx", "css"],
+  watchedFileTypes: [".ts", ".tsx", ".css"],
   excludes: ["dist", "build.ts"],
   fallback: fsWatch,
 });
