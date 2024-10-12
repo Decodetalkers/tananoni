@@ -6,7 +6,8 @@
   "version": "0.3.6",
   "exports": "./mod.ts",
   "tasks": {
-    "dev": "deno test --watch mod.ts"
+    "dev": "deno test --watch mod.ts",
+    "test": "deno test --allow-all"
   },
   "license": "MIT",
   "imports": {

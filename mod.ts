@@ -103,7 +103,7 @@ export type LinkInfo = {
 };
 
 /**
- * Descript the script part of the html
+ * Describe the script part of the html
  * You can set the type to "module" to support run async
  */
 export type Script = {
@@ -111,6 +111,9 @@ export type Script = {
   src: string;
 };
 
+/**
+ * Describe the Html
+ */
 export class WebPageUnit {
   private title = "";
   private css: string | undefined;
@@ -120,6 +123,10 @@ export class WebPageUnit {
   private entryPoint_: string;
   private mountpoints: MountInfo[];
   private scripts: Script[];
+
+  /**
+   * Set the linkInfos
+   */
   with_linkInfos(linkInfos: LinkInfo[]): WebPageUnit {
     this.linkInfos = linkInfos;
     return this;
@@ -179,23 +186,16 @@ export class WebPageUnit {
     this.css = css;
     return this;
   }
-
+  /**
+   * entryPoin: The compile source
+   * mountpoints:  Where to mount
+   * scripts: The Binded scripts
+   * route: default is `index.html`
+   */
   constructor(
-    /**
-     * the compile source
-     */
     entryPoint: string,
-    /**
-     * Where to mount
-     */
     mountpoints: MountInfo[],
-    /**
-     * mount script
-     */
     scripts: Script[],
-    /**
-     * The htmlName, for example `index.html`
-     */
     route: string | undefined = undefined,
   ) {
     this.entryPoint_ = entryPoint;
