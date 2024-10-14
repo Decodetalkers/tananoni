@@ -1,11 +1,13 @@
 {
   "version": "4",
   "specifiers": {
+    "jsr:@luca/esbuild-deno-loader@0.11": "0.11.0",
     "jsr:@luca/esbuild-deno-loader@~0.10.3": "0.10.3",
     "jsr:@nobody/styled-components-deno@~0.8.2": "0.8.2",
     "jsr:@std/assert@^1.0.6": "1.0.6",
     "jsr:@std/assert@~0.213.1": "0.213.1",
     "jsr:@std/async@^1.0.6": "1.0.6",
+    "jsr:@std/bytes@^1.0.2": "1.0.2",
     "jsr:@std/cli@^1.0.6": "1.0.6",
     "jsr:@std/encoding@0.213": "0.213.1",
     "jsr:@std/encoding@^1.0.5": "1.0.5",
@@ -35,6 +37,14 @@
         "jsr:@std/path@0.213"
       ]
     },
+    "@luca/esbuild-deno-loader@0.11.0": {
+      "integrity": "c05a989aa7c4ee6992a27be5f15cfc5be12834cab7ff84cabb47313737c51a2c",
+      "dependencies": [
+        "jsr:@std/bytes",
+        "jsr:@std/encoding@^1.0.5",
+        "jsr:@std/path@^1.0.6"
+      ]
+    },
     "@nobody/styled-components-deno@0.8.2": {
       "integrity": "9a3795374844bdcf0d09453fd9b6725cc047222440b0ac20376b254c04bb0b5e",
       "dependencies": [
@@ -53,6 +63,9 @@
     },
     "@std/async@1.0.6": {
       "integrity": "6d262156dd35c4a72ee1a2f8679be40264f370cfb92e2e13d4eca2ae05e16f34"
+    },
+    "@std/bytes@1.0.2": {
+      "integrity": "fbdee322bbd8c599a6af186a1603b3355e59a5fb1baa139f8f4c3c9a1b3e3d57"
     },
     "@std/cli@1.0.6": {
       "integrity": "d22d8b38c66c666d7ad1f2a66c5b122da1704f985d3c47f01129f05abb6c5d3d"
@@ -340,7 +353,7 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@luca/esbuild-deno-loader@~0.10.3",
+      "jsr:@luca/esbuild-deno-loader@0.11",
       "jsr:@std/assert@^1.0.6",
       "jsr:@std/async@^1.0.6",
       "jsr:@std/fs@^1.0.4",
