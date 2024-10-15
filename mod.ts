@@ -94,11 +94,11 @@ export { refreshMiddleware, watchChanges, type WatchInfo };
 
 /**
  * Describe the mount point in html
- * The mount point can be "div", "main" or "header"
+ * The mount point can be "div", "main" , "header" or "footer"
  * You need to set the mount id
  */
 export type MountInfo = {
-  type: "div" | "main" | "header";
+  type: "div" | "main" | "header" | "footer";
   id: string;
 };
 
@@ -247,17 +247,9 @@ export class WebPageUnit {
     const output: string[] = [];
 
     for (const mountpoint of this.mountpoints) {
-      switch (mountpoint.type) {
-        case "main":
-          output.push(`<main id="${mountpoint.id}"></main>`);
-          break;
-        case "header":
-          output.push(`<header id="${mountpoint.id}"></header>`);
-          break;
-        case "div":
-          output.push(`<div id="${mountpoint.id}"></div>`);
-          break;
-      }
+      output.push(
+        `<${mountpoint.type} id="${mountpoint.id}"></${mountpoint.type}>`,
+      );
     }
     for (const script of this.scripts) {
       switch (script.type) {
