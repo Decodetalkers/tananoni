@@ -411,19 +411,21 @@ export class GenWebsite {
   private format_: esBuildFormat = "esm";
 
   get format(): esBuildFormat {
-    return this.format_
+    return this.format_;
   }
 
   appendPlugin(esbuildPlugin: esbuild.Plugin) {
     this.esbuildPlugins.push(esbuildPlugin);
   }
 
-  withFormat(format: esBuildFormat) {
+  withFormat(format: esBuildFormat): GenWebsite {
     this.format_ = format;
+    return this;
   }
 
-  withBaseTargetDir(targetDir: string) {
+  withBaseTargetDir(targetDir: string): GenWebsite {
     this.targetBaseDir = targetDir;
+    return this;
   }
 
   /**
