@@ -455,6 +455,7 @@ export class GenWebsite {
       this.logLevel,
       this.esbuildPlugins,
       this.targetBaseDir,
+      this.format_,
     );
   }
 
@@ -579,6 +580,7 @@ async function generateWebsite(
   logLevel: esbuild.LogLevel | undefined,
   plugins: esbuild.Plugin[],
   targetDir: string,
+  format: esBuildFormat,
 ): Promise<esBuildResultInfo[]> {
   let outputDir = targetDir;
   if (route.base_route) {
@@ -608,7 +610,7 @@ async function generateWebsite(
     jsx: "automatic",
     outdir: outputDir,
     bundle: true,
-    format: "esm",
+    format,
     logLevel,
     plugins,
   };
@@ -630,6 +632,7 @@ async function generateWebsite(
         logLevel,
         plugins,
         targetDir,
+        format,
       )),
     ];
   }
