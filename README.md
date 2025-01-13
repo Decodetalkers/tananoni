@@ -14,7 +14,7 @@ import { GenWebsite, Route, WebPageUnit } from "tananoni";
 
 const route_2 = new Route("under")
   .appendAssert({ path: "favicon.ico" })
-  .appendWebpage(
+  .appendWebPage(
     new WebPageUnit(
       "src/main.tsx",
       [{ type: "main", id: "mount" }],
@@ -28,7 +28,7 @@ const route_2 = new Route("under")
         },
       ]),
   )
-  .appendWebpage(
+  .appendWebPage(
     new WebPageUnit(
       "./src/hello.tsx",
       [{ type: "main", id: "mount" }],
@@ -45,7 +45,7 @@ const route_2 = new Route("under")
   );
 const route = new Route("example")
   .appendAssert({ path: "favicon.ico" })
-  .appendWebpage(
+  .appendWebPage(
     new WebPageUnit(
       "src/main.tsx",
       [{ type: "main", id: "mount" }],
@@ -59,7 +59,7 @@ const route = new Route("example")
         },
       ]),
   )
-  .appendWebpage(
+  .appendWebPage(
     new WebPageUnit(
       "./src/hello.tsx",
       [{ type: "main", id: "mount" }],

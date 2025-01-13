@@ -9,7 +9,7 @@
  *
  * const route_2 = new Route("under")
  *   .appendAssert({ path: "favicon.ico" })
- *   .appendWebpage(
+ *   .appendWebPage(
  *     new WebPageUnit(
  *       "src/main.tsx",
  *       [{ type: "main", id: "mount" }],
@@ -23,7 +23,7 @@
  *         },
  *       ]),
  *   )
- *   .appendWebpage(
+ *   .appendWebPage(
  *     new WebPageUnit(
  *       "./src/hello.tsx",
  *       [{ type: "main", id: "mount" }],
@@ -40,7 +40,7 @@
  *   );
  * const route = new Route("example")
  *   .appendAssert({ path: "favicon.ico" })
- *   .appendWebpage(
+ *   .appendWebPage(
  *     new WebPageUnit(
  *       "src/main.tsx",
  *       [{ type: "main", id: "mount" }],
@@ -54,7 +54,7 @@
  *         },
  *       ]),
  *   )
- *   .appendWebpage(
+ *   .appendWebPage(
  *     new WebPageUnit(
  *       "./src/hello.tsx",
  *       [{ type: "main", id: "mount" }],
@@ -120,10 +120,25 @@ export type Script = {
   src: string;
 };
 
+export type WebUnit = {
+  readonly onlyJavaScript: boolean;
+  htmlName?: string;
+  entryPoint: string;
+  genHtml?: () => string;
+};
+
+export class JavaScriptUnit implements WebUnit {
+  readonly onlyJavaScript: boolean = true;
+  entryPoint: string;
+  constructor(entryPoint: string) {
+    this.entryPoint = entryPoint;
+  }
+}
+
 /**
  * Describe the Html
  */
-export class WebPageUnit {
+export class WebPageUnit implements WebUnit {
   private title = "";
   private css: string | undefined;
   private viewport = "width=device-width, initial-scale=1.0";
@@ -132,7 +147,8 @@ export class WebPageUnit {
   private entryPoint_: string;
   private mountpoints: MountInfo[];
   private scripts: Script[];
-  private withHtml: boolean = true;
+
+  readonly onlyJavaScript = false;
 
   /**
    * Set the linkInfos
@@ -172,18 +188,6 @@ export class WebPageUnit {
    */
   get entryPoint(): string {
     return this.entryPoint_;
-  }
-
-  /**
-   * If want the comple target be a plugin not website,
-   * use this function
-   */
-  withOutHtml() {
-    this.withHtml = false;
-  }
-
-  get onlyJavaScript(): boolean {
-    return !this.withHtml;
   }
 
   /**
@@ -289,7 +293,7 @@ export class WebPageUnit {
   /**
    * Return the current result of the html
    */
-  genhtml(): string {
+  genHtml(): string {
     let template = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -328,7 +332,7 @@ export type Assert = {
  */
 export class Route {
   subroutes: Route[] = [];
-  webpages: WebPageUnit[] = [];
+  webpages: WebUnit[] = [];
   base_route: string | undefined;
   asserts: Assert[] = [];
   hot_reload: boolean = false;
@@ -342,9 +346,17 @@ export class Route {
   }
 
   /**
+   * append just javascript
+   */
+  appendJavaScrpt(js: JavaScriptUnit): Route {
+    this.webpages.push(js);
+    return this;
+  }
+
+  /**
    * Append new webpage to the route
    */
-  appendWebpage(webpage: WebPageUnit): Route {
+  appendWebPage(webpage: WebPageUnit): Route {
     this.webpages.push(webpage);
     return this;
   }
@@ -463,8 +475,8 @@ async function generateWebsite(
   }
   for (const unit of route.webpages) {
     if (!unit.onlyJavaScript) {
-      const html = unit.htmlName;
-      const text = unit.genhtml();
+      const html = unit.htmlName!;
+      const text = unit.genHtml!();
       const htmlPath = join(outputDir, html);
       Deno.writeTextFile(htmlPath, text);
     }

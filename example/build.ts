@@ -9,7 +9,7 @@ import { serveDir } from "@std/http";
 
 const route_2 = new Route("under")
   .appendAssert({ path: "favicon.ico" })
-  .appendWebpage(
+  .appendWebPage(
     new WebPageUnit(
       "src/main.tsx",
       [{ type: "main", id: "mount" }],
@@ -23,7 +23,7 @@ const route_2 = new Route("under")
         },
       ]),
   )
-  .appendWebpage(
+  .appendWebPage(
     new WebPageUnit(
       "./src/hello.tsx",
       [{ type: "main", id: "mount" }],
@@ -40,7 +40,7 @@ const route_2 = new Route("under")
   );
 const route = new Route()
   .appendAssert({ path: "favicon.ico" })
-  .appendWebpage(
+  .appendWebPage(
     new WebPageUnit(
       "src/main.tsx",
       [{ type: "main", id: "mount" }],
@@ -55,7 +55,7 @@ const route = new Route()
       ])
       .withHotReload(),
   )
-  .appendWebpage(
+  .appendWebPage(
     new WebPageUnit(
       "./src/hello.tsx",
       [{ type: "main", id: "mount" }],
