@@ -8,30 +8,30 @@
  * import { GenWebsite, Route, WebPageUnit } from "tananoni";
  *
  * const route_2 = new Route("under")
- *   .append_assert({ path: "favicon.ico" })
- *   .append_webpage(
+ *   .appendAssert({ path: "favicon.ico" })
+ *   .appendWebpage(
  *     new WebPageUnit(
  *       "src/main.tsx",
  *       [{ type: "main", id: "mount" }],
  *       [{ src: "main.js" }],
  *     )
- *       .with_title("index")
- *       .with_linkInfos([
+ *       .withTitle("index")
+ *       .withLinkInfos([
  *         {
  *           type: "icon",
  *           href: "favicon.icon",
  *         },
  *       ]),
  *   )
- *   .append_webpage(
+ *   .appendWebpage(
  *     new WebPageUnit(
  *       "./src/hello.tsx",
  *       [{ type: "main", id: "mount" }],
  *       [{ src: "hello.js" }],
  *     )
- *       .with_title("hello")
- *       .with_htmlName("hello.html")
- *       .with_linkInfos([
+ *       .withTitle("hello")
+ *       .withHtmlName("hello.html")
+ *       .withLinkInfos([
  *         {
  *           type: "icon",
  *           href: "favicon.icon",
@@ -39,37 +39,37 @@
  *       ]),
  *   );
  * const route = new Route("example")
- *   .append_assert({ path: "favicon.ico" })
- *   .append_webpage(
+ *   .appendAssert({ path: "favicon.ico" })
+ *   .appendWebpage(
  *     new WebPageUnit(
  *       "src/main.tsx",
  *       [{ type: "main", id: "mount" }],
  *       [{ src: "main.js" }],
  *     )
- *       .with_title("index")
- *       .with_linkInfos([
+ *       .withTitle("index")
+ *       .withLinkInfos([
  *         {
  *           type: "icon",
  *           href: "favicon.icon",
  *         },
  *       ]),
  *   )
- *   .append_webpage(
+ *   .appendWebpage(
  *     new WebPageUnit(
  *       "./src/hello.tsx",
  *       [{ type: "main", id: "mount" }],
  *       [{ src: "hello.js" }],
  *     )
- *       .with_title("hello")
- *       .with_linkInfos([
+ *       .withTitle("hello")
+ *       .withLinkInfos([
  *         {
  *           type: "icon",
  *           href: "favicon.icon",
  *         },
  *       ])
- *       .with_htmlName("hello.html"),
+ *       .withHtmlName("hello.html"),
  *   )
- *   .append_route(route_2);
+ *   .appendRoute(route_2);
  * const webgen = new GenWebsite()
  *   .withLogLevel("info")
  *   .withImportSource("npm:preact");
@@ -344,7 +344,7 @@ export class Route {
   /**
    * Append new webpage to the route
    */
-  append_webpage(webpage: WebPageUnit): Route {
+  appendWebpage(webpage: WebPageUnit): Route {
     this.webpages.push(webpage);
     return this;
   }
@@ -353,7 +353,7 @@ export class Route {
    * Add a subroute. For example, the subroute is doc, and the parent one is `debug`,
    * then the real route of subroute will be `debug/doc`
    */
-  append_route(route: Route): Route {
+  appendRoute(route: Route): Route {
     assert(route.base_route);
     this.subroutes.push(route);
     return this;
@@ -363,7 +363,7 @@ export class Route {
    * Append the assert(s) of current route. The assert(s) will copySync to the path under
    * the dir of current route.
    */
-  append_assert(assert: Assert): Route {
+  appendAssert(assert: Assert): Route {
     this.asserts.push(assert);
     return this;
   }
@@ -372,7 +372,7 @@ export class Route {
    * if be set to true, then under this route, there will be generate a file named hot_reload.js
    * This js is used to hot_reload
    */
-  with_hotReload(hot_reload: boolean): Route {
+  withHotReload(hot_reload: boolean): Route {
     this.hot_reload = hot_reload;
     return this;
   }

@@ -8,8 +8,8 @@ import {
 import { serveDir } from "@std/http";
 
 const route_2 = new Route("under")
-  .append_assert({ path: "favicon.ico" })
-  .append_webpage(
+  .appendAssert({ path: "favicon.ico" })
+  .appendWebpage(
     new WebPageUnit(
       "src/main.tsx",
       [{ type: "main", id: "mount" }],
@@ -23,7 +23,7 @@ const route_2 = new Route("under")
         },
       ]),
   )
-  .append_webpage(
+  .appendWebpage(
     new WebPageUnit(
       "./src/hello.tsx",
       [{ type: "main", id: "mount" }],
@@ -39,8 +39,8 @@ const route_2 = new Route("under")
       ]),
   );
 const route = new Route()
-  .append_assert({ path: "favicon.ico" })
-  .append_webpage(
+  .appendAssert({ path: "favicon.ico" })
+  .appendWebpage(
     new WebPageUnit(
       "src/main.tsx",
       [{ type: "main", id: "mount" }],
@@ -55,7 +55,7 @@ const route = new Route()
       ])
       .withHotReload(),
   )
-  .append_webpage(
+  .appendWebpage(
     new WebPageUnit(
       "./src/hello.tsx",
       [{ type: "main", id: "mount" }],
@@ -70,8 +70,8 @@ const route = new Route()
       ])
       .withHtmlName("hello.html"),
   )
-  .with_hotReload(true)
-  .append_route(route_2);
+  .withHotReload(true)
+  .appendRoute(route_2);
 const webgen = new GenWebsite()
   .withLogLevel("info")
   .withImportSource("npm:preact");
