@@ -408,9 +408,18 @@ export class GenWebsite {
   logLevel?: esbuild.LogLevel | undefined;
   esbuildPlugins: esbuild.Plugin[] = [];
   targetBaseDir: string = baseTargetDir;
+  private format_: esBuildFormat = "esm";
+
+  get format(): esBuildFormat {
+    return this.format_
+  }
 
   appendPlugin(esbuildPlugin: esbuild.Plugin) {
     this.esbuildPlugins.push(esbuildPlugin);
+  }
+
+  withFormat(format: esBuildFormat) {
+    this.format_ = format;
   }
 
   withBaseTargetDir(targetDir: string) {
@@ -460,6 +469,7 @@ export class GenWebsite {
       this.logLevel,
       this.esbuildPlugins,
       this.targetBaseDir,
+      this.format_,
     );
   }
 }
@@ -492,6 +502,8 @@ export type esBuildResultContext = {
   route: Route;
 };
 
+export type esBuildFormat = "iife" | "cjs" | "esm";
+
 async function generateWebsiteWithContext(
   parent: string | undefined,
   route: Route,
@@ -499,6 +511,7 @@ async function generateWebsiteWithContext(
   logLevel: esbuild.LogLevel | undefined,
   plugins: esbuild.Plugin[],
   targetDir: string,
+  format: esBuildFormat,
 ): Promise<esBuildResultContext[]> {
   let outputDir = targetDir;
   if (route.base_route) {
@@ -528,7 +541,7 @@ async function generateWebsiteWithContext(
     jsx: "automatic",
     outdir: outputDir,
     bundle: true,
-    format: "esm",
+    format,
     logLevel,
     plugins,
   };
@@ -550,6 +563,7 @@ async function generateWebsiteWithContext(
         logLevel,
         plugins,
         outputDir,
+        format,
       )),
     ];
   }
