@@ -74,7 +74,7 @@
  *   .withLogLevel("info")
  *   .withImportSource("npm:preact");
  *
- * await webgen.generate_website(route);
+ * await webgen.generateWebsite(route);
  * ```
  */
 
@@ -412,8 +412,8 @@ export class GenWebsite {
   /**
    * Start generate the website
    */
-  async generate_website(route: Route) {
-    await generate_website(
+  async generateWebsite(route: Route) {
+    await generateWebsite(
       undefined,
       route,
       this.jsxImportSource,
@@ -442,7 +442,7 @@ const esbuildPlugins = [
 
 const copySyncOption = { overwrite: true };
 
-async function generate_website(
+async function generateWebsite(
   parent: string | undefined,
   route: Route,
   jsxImportSource: string | undefined,
@@ -489,7 +489,7 @@ async function generate_website(
     copySync(assertPath, join(outputDir, targetPath), copySyncOption);
   }
   for (const subroute of route.subroutes) {
-    await generate_website(
+    await generateWebsite(
       route.base_route,
       subroute,
       jsxImportSource,

@@ -76,7 +76,7 @@ const webgen = new GenWebsite()
   .withLogLevel("info")
   .withImportSource("npm:preact");
 
-await webgen.generate_website(route);
+await webgen.generateWebsite(route);
 
 const fsRoot = `${Deno.cwd()}/dist/`;
 Deno.serve({ hostname: "localhost", port: 8000 }, async (req) => {
@@ -90,7 +90,7 @@ Deno.serve({ hostname: "localhost", port: 8000 }, async (req) => {
 });
 
 async function fsWatch() {
-  await webgen.generate_website(route);
+  await webgen.generateWebsite(route);
 }
 
 await watchChanges({
