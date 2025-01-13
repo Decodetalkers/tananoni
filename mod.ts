@@ -348,7 +348,7 @@ export class Route {
   /**
    * append just javascript
    */
-  appendJavaScrpt(js: JavaScriptUnit): Route {
+  appendJavaScript(js: JavaScriptUnit): Route {
     this.webpages.push(js);
     return this;
   }
