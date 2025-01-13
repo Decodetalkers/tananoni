@@ -398,6 +398,8 @@ export class Route {
   }
 }
 
+const baseTargetDir = "dist";
+
 /**
  * GenWebsite class, directly wrap the esbuild
  */
@@ -405,9 +407,14 @@ export class GenWebsite {
   jsxImportSource?: string | undefined;
   logLevel?: esbuild.LogLevel | undefined;
   esbuildPlugins: esbuild.Plugin[] = [];
+  targetBaseDir: string = baseTargetDir;
 
   appendPlugin(esbuildPlugin: esbuild.Plugin) {
     this.esbuildPlugins.push(esbuildPlugin);
+  }
+
+  withBaseTargetDir(targetDir: string) {
+    this.targetBaseDir = targetDir;
   }
 
   /**
@@ -436,6 +443,7 @@ export class GenWebsite {
       this.jsxImportSource,
       this.logLevel,
       this.esbuildPlugins,
+      this.targetBaseDir,
     );
   }
 
@@ -451,11 +459,10 @@ export class GenWebsite {
       this.jsxImportSource,
       this.logLevel,
       this.esbuildPlugins,
+      this.targetBaseDir,
     );
   }
 }
-
-const baseOutputDir = "dist";
 
 let importMapURL: string | undefined = resolve("./import_map.json");
 
@@ -491,8 +498,9 @@ async function generateWebsiteWithContext(
   jsxImportSource: string | undefined,
   logLevel: esbuild.LogLevel | undefined,
   plugins: esbuild.Plugin[],
+  targetDir: string,
 ): Promise<esBuildResultContext[]> {
-  let outputDir = baseOutputDir;
+  let outputDir = targetDir;
   if (route.base_route) {
     let subdir = route.base_route;
     if (parent) {
@@ -541,6 +549,7 @@ async function generateWebsiteWithContext(
         jsxImportSource,
         logLevel,
         plugins,
+        outputDir,
       )),
     ];
   }
@@ -553,8 +562,9 @@ async function generateWebsite(
   jsxImportSource: string | undefined,
   logLevel: esbuild.LogLevel | undefined,
   plugins: esbuild.Plugin[],
+  targetDir: string,
 ): Promise<esBuildResultInfo[]> {
-  let outputDir = baseOutputDir;
+  let outputDir = targetDir;
   if (route.base_route) {
     let subdir = route.base_route;
     if (parent) {
@@ -603,6 +613,7 @@ async function generateWebsite(
         jsxImportSource,
         logLevel,
         plugins,
+        targetDir,
       )),
     ];
   }
