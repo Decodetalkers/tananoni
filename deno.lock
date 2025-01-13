@@ -4,6 +4,7 @@
     "jsr:@luca/esbuild-deno-loader@~0.10.3": "0.10.3",
     "jsr:@luca/esbuild-deno-loader@~0.11.1": "0.11.1",
     "jsr:@nobody/styled-components-deno@~0.8.2": "0.8.2",
+    "jsr:@std/assert@*": "1.0.9",
     "jsr:@std/assert@^1.0.9": "1.0.9",
     "jsr:@std/assert@~0.213.1": "0.213.1",
     "jsr:@std/async@^1.0.3": "1.0.9",

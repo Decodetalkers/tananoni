@@ -15,8 +15,8 @@ const route_2 = new Route("under")
       [{ type: "main", id: "mount" }],
       [{ src: "main.js" }],
     )
-      .with_title("index")
-      .with_linkInfos([
+      .withTitle("index")
+      .withLinkInfos([
         {
           type: "icon",
           href: "favicon.icon",
@@ -29,9 +29,9 @@ const route_2 = new Route("under")
       [{ type: "main", id: "mount" }],
       [{ src: "hello.js" }],
     )
-      .with_title("hello")
-      .with_htmlName("hello.html")
-      .with_linkInfos([
+      .withTitle("hello")
+      .withHtmlName("hello.html")
+      .withLinkInfos([
         {
           type: "icon",
           href: "favicon.icon",
@@ -46,14 +46,14 @@ const route = new Route()
       [{ type: "main", id: "mount" }],
       [{ src: "main.js" }],
     )
-      .with_title("index")
-      .with_linkInfos([
+      .withTitle("index")
+      .withLinkInfos([
         {
           type: "icon",
           href: "favicon.icon",
         },
       ])
-      .with_hotReload(),
+      .withHotReload(),
   )
   .append_webpage(
     new WebPageUnit(
@@ -61,14 +61,14 @@ const route = new Route()
       [{ type: "main", id: "mount" }],
       [{ src: "hello.js" }],
     )
-      .with_title("hello")
-      .with_linkInfos([
+      .withTitle("hello")
+      .withLinkInfos([
         {
           type: "icon",
           href: "favicon.icon",
         },
       ])
-      .with_htmlName("hello.html"),
+      .withHtmlName("hello.html"),
   )
   .with_hotReload(true)
   .append_route(route_2);

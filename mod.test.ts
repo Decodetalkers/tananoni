@@ -7,7 +7,7 @@ Deno.test(function generate() {
     type: "module",
     src: "main.js",
   }])
-    .with_title("hello");
+    .withTitle("hello");
   assertEquals(
     webpage.genhtml(),
     `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>hello</title></head><body><main id="mount"></main><script type="module" src="main.js"></script></body></html>`,

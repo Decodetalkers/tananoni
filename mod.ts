@@ -132,11 +132,12 @@ export class WebPageUnit {
   private entryPoint_: string;
   private mountpoints: MountInfo[];
   private scripts: Script[];
+  private withHtml: boolean = true;
 
   /**
    * Set the linkInfos
    */
-  with_linkInfos(linkInfos: LinkInfo[]): WebPageUnit {
+  withLinkInfos(linkInfos: LinkInfo[]): WebPageUnit {
     this.linkInfos = linkInfos;
     return this;
   }
@@ -145,7 +146,7 @@ export class WebPageUnit {
    * Add another script named hot_reload.js
    * This js will use websocket to do update
    */
-  with_hotReload(): WebPageUnit {
+  withHotReload(): WebPageUnit {
     this.scripts.push({ src: "hot_reload.js" });
     return this;
   }
@@ -174,9 +175,21 @@ export class WebPageUnit {
   }
 
   /**
+   * If want the comple target be a plugin not website,
+   * use this function
+   */
+  withOutHtml() {
+    this.withHtml = false;
+  }
+
+  get onlyJavaScript(): boolean {
+    return !this.withHtml;
+  }
+
+  /**
    * Viewport part of html
    */
-  with_viewport(viewport_setting: string): WebPageUnit {
+  withViewport(viewport_setting: string): WebPageUnit {
     this.viewport = viewport_setting;
     return this;
   }
@@ -184,7 +197,7 @@ export class WebPageUnit {
   /**
    * With this function to set the target htmlName
    */
-  with_htmlName(htmlName: string): WebPageUnit {
+  withHtmlName(htmlName: string): WebPageUnit {
     this.htmlName_ = htmlName;
     return this;
   }
@@ -192,7 +205,7 @@ export class WebPageUnit {
   /**
    * Set the page title
    */
-  with_title(title: string): WebPageUnit {
+  withTitle(title: string): WebPageUnit {
     this.title = title;
     return this;
   }
@@ -200,7 +213,7 @@ export class WebPageUnit {
   /**
    * Set the part of <style/> in html
    */
-  with_globalcss(css: string): WebPageUnit {
+  withGlobalcss(css: string): WebPageUnit {
     this.css = css;
     return this;
   }
@@ -449,10 +462,12 @@ async function generate_website(
     Deno.writeTextFile(reloadJs, hotReloadScript);
   }
   for (const unit of route.webpages) {
-    const html = unit.htmlName;
-    const text = unit.genhtml();
-    const htmlPath = join(outputDir, html);
-    Deno.writeTextFile(htmlPath, text);
+    if (!unit.onlyJavaScript) {
+      const html = unit.htmlName;
+      const text = unit.genhtml();
+      const htmlPath = join(outputDir, html);
+      Deno.writeTextFile(htmlPath, text);
+    }
     const esBuildOptions: esbuild.BuildOptions = {
       entryPoints: [
         unit.entryPoint,
