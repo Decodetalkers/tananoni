@@ -429,8 +429,8 @@ export class GenWebsite {
   /**
    * Start generate the website
    */
-  async generateWebsite(route: Route) {
-    await generateWebsite(
+  async generateWebsite(route: Route): Promise<esBuildResultInfo[]> {
+    return await generateWebsite(
       undefined,
       route,
       this.jsxImportSource,
@@ -442,8 +442,10 @@ export class GenWebsite {
   /**
    * Start generate the website
    */
-  async generateWebsiteWithContext(route: Route) {
-    await generateWebsiteWithContext(
+  async generateWebsiteWithContext(
+    route: Route,
+  ): Promise<esBuildResultContext[]> {
+    return await generateWebsiteWithContext(
       undefined,
       route,
       this.jsxImportSource,
