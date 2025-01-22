@@ -147,8 +147,26 @@ export class WebPageUnit implements WebUnit {
   private entryPoint_: string;
   private mountpoints: MountInfo[];
   private scripts: Script[];
+  private _lang: string = "en";
 
   readonly onlyJavaScript = false;
+
+  /*
+   *
+   * read the lang
+   */
+  get lang(): string {
+    return this.lang;
+  }
+
+  /**
+   * set the language of the html
+   * default is en
+   */
+  withLang(lang: string): WebPageUnit {
+    this._lang = lang;
+    return this;
+  }
 
   /**
    * Set the linkInfos
@@ -295,7 +313,7 @@ export class WebPageUnit implements WebUnit {
    */
   genHtml(): string {
     let template = `<!DOCTYPE html>
-<html lang="en">
+<html lang="${this._lang}">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="${this.viewport}" />
