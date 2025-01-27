@@ -7,6 +7,15 @@ import {
 } from "tananoni";
 import { serveDir } from "@std/http";
 
+import { parseArgs } from "@std/cli/parse-args";
+interface BuildMode {
+  debug?: boolean;
+  release?: boolean;
+}
+
+const input_args = parseArgs(Deno.args) as BuildMode;
+
+const release_mode = input_args.release;
 const route_2 = new Route("under")
   .appendAssert({ path: "favicon.ico" })
   .appendWebPage(
@@ -50,7 +59,7 @@ const route = new Route()
       .withLinkInfos([
         {
           type: "icon",
-          href: "favicon.icon",
+          href: "favicon.ico",
         },
       ])
       .withHotReload(),
@@ -77,6 +86,10 @@ const webgen = new GenWebsite()
   .withImportSource("npm:preact");
 
 await webgen.generateWebsite(route);
+
+if (release_mode) {
+  Deno.exit();
+}
 
 const fsRoot = `${Deno.cwd()}/dist/`;
 Deno.serve({ hostname: "localhost", port: 8000 }, async (req) => {

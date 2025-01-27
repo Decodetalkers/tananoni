@@ -152,7 +152,6 @@ export class WebPageUnit implements WebUnit {
   readonly onlyJavaScript = false;
 
   /*
-   *
    * read the lang
    */
   get lang(): string {
