@@ -10,7 +10,6 @@
     "preact": "npm:preact@^10.23.2",
     "react": "npm:react@^18.3.1",
     "styled-components-deno": "jsr:@nobody/styled-components-deno@^0.8.2",
-    "tananoni": "../mod.ts",
     "~/functions/": "./functions/"
   },
   "tasks": {

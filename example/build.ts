@@ -4,7 +4,7 @@ import {
   Route,
   watchChanges,
   WebPageUnit,
-} from "tananoni";
+} from "@nobody/tananoni";
 import { serveDir } from "@std/http";
 
 import { parseArgs } from "@std/cli/parse-args";
