@@ -148,6 +148,7 @@ export class WebPageUnit implements WebUnit {
   private mountpoints: MountInfo[];
   private scripts: Script[];
   private _lang: string = "en";
+  private hot_reload = false;
 
   readonly onlyJavaScript = false;
 
@@ -179,8 +180,8 @@ export class WebPageUnit implements WebUnit {
    * Add another script named hot_reload.js
    * This js will use websocket to do update
    */
-  withHotReload(): WebPageUnit {
-    this.scripts.push({ src: "hot_reload.js" });
+  withHotReload(hot_reload: boolean): WebPageUnit {
+    this.hot_reload = hot_reload;
     return this;
   }
 
@@ -285,7 +286,11 @@ export class WebPageUnit implements WebUnit {
         `<${mountpoint.type} id="${mountpoint.id}"></${mountpoint.type}>`,
       );
     }
-    for (const script of this.scripts) {
+    const gen_scripts = [...this.scripts];
+    if (this.hot_reload) {
+      gen_scripts.push({ src: "hot_reload.js" });
+    }
+    for (const script of gen_scripts) {
       switch (script.type) {
         case "module":
           output.push(`<script type="module" src="${script.src}"></script>`);

@@ -62,7 +62,7 @@ const route = new Route()
           href: "favicon.ico",
         },
       ])
-      .withHotReload(),
+      .withHotReload(true),
   )
   .appendWebPage(
     new WebPageUnit(
