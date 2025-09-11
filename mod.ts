@@ -78,10 +78,8 @@
  * ```
  */
 
-import * as esbuild from "esbuild";
-import { denoPlugins } from "@luca/esbuild-deno-loader";
-import { copySync, ensureDir, existsSync } from "@std/fs";
-import { basename, join, resolve } from "@std/path";
+import { copySync, ensureDir } from "@std/fs";
+import { basename, join } from "@std/path";
 import { assert } from "@std/assert";
 import {
   hotReloadScript,
@@ -427,22 +425,11 @@ const baseTargetDir = "dist";
  */
 export class GenWebsite {
   jsxImportSource?: string | undefined;
-  logLevel?: esbuild.LogLevel | undefined;
-  esbuildPlugins: esbuild.Plugin[] = [];
   targetBaseDir: string = baseTargetDir;
-  private format_: esBuildFormat = "esm";
+  private format_: Deno.bundle.Format = "esm";
 
-  get format(): esBuildFormat {
+  get format(): Deno.bundle.Format {
     return this.format_;
-  }
-
-  appendPlugin(esbuildPlugin: esbuild.Plugin) {
-    this.esbuildPlugins.push(esbuildPlugin);
-  }
-
-  withFormat(format: esBuildFormat): GenWebsite {
-    this.format_ = format;
-    return this;
   }
 
   withBaseTargetDir(targetDir: string): GenWebsite {
@@ -451,159 +438,31 @@ export class GenWebsite {
   }
 
   /**
-   * jsxImportSource in esbuild
-   */
-  withImportSource(importSource: string): GenWebsite {
-    this.jsxImportSource = importSource;
-    return this;
-  }
-
-  /**
-   * Set the logLevel of esbuild
-   */
-  withLogLevel(logLevel: esbuild.LogLevel): GenWebsite {
-    this.logLevel = logLevel;
-    return this;
-  }
-
-  /**
    * Start generate the website
    */
-  async generateWebsite(route: Route): Promise<esBuildResultInfo[]> {
+  async generateWebsite(route: Route): Promise<BundleResultInfo[]> {
     return await generateWebsite(
       undefined,
       route,
-      this.jsxImportSource,
-      this.logLevel,
-      this.esbuildPlugins,
-      this.targetBaseDir,
-      this.format_,
-    );
-  }
-
-  /**
-   * Start generate the website
-   */
-  async generateWebsiteWithContext(
-    route: Route,
-  ): Promise<esBuildResultContext[]> {
-    return await generateWebsiteWithContext(
-      undefined,
-      route,
-      this.jsxImportSource,
-      this.logLevel,
-      this.esbuildPlugins,
       this.targetBaseDir,
       this.format_,
     );
   }
 }
-
-let importMapURL: string | undefined = resolve("./import_map.json");
-
-if (!existsSync(importMapURL)) {
-  importMapURL = undefined;
-}
-const configUrl = resolve("./deno.json");
-
-const esbuildPlugins = [
-  ...denoPlugins(
-    {
-      importMapURL: importMapURL,
-      configPath: configUrl,
-    },
-  ),
-];
 
 const copySyncOption = { overwrite: true };
 
-export type esBuildResultInfo = {
-  result: esbuild.BuildResult;
+export type BundleResultInfo = {
+  result: Deno.bundle.Result;
   route: Route;
 };
-
-export type esBuildResultContext = {
-  ctx: esbuild.BuildContext;
-  route: Route;
-};
-
-export type esBuildFormat = "iife" | "cjs" | "esm";
-
-async function generateWebsiteWithContext(
-  parent: string | undefined,
-  route: Route,
-  jsxImportSource: string | undefined,
-  logLevel: esbuild.LogLevel | undefined,
-  plugins: esbuild.Plugin[],
-  targetDir: string,
-  format: esBuildFormat,
-): Promise<esBuildResultContext[]> {
-  let outputDir = targetDir;
-  if (route.base_route) {
-    let subdir = route.base_route;
-    if (parent) {
-      subdir = join(parent, subdir);
-    }
-    outputDir = join(outputDir, subdir);
-  }
-  await ensureDir(outputDir);
-  if (route.hot_reload) {
-    const reloadJs = join(outputDir, "hot_reload.js");
-    Deno.writeTextFile(reloadJs, hotReloadScript);
-  }
-  const entryPoints = route.webpages.map((webpage) => webpage.entryPoint);
-  for (const unit of route.webpages) {
-    if (!unit.onlyJavaScript) {
-      const html = unit.htmlName!;
-      const text = unit.genHtml!();
-      const htmlPath = join(outputDir, html);
-      Deno.writeTextFile(htmlPath, text);
-    }
-  }
-  const esBuildOptions: esbuild.BuildOptions = {
-    entryPoints,
-    jsxImportSource,
-    jsx: "automatic",
-    outdir: outputDir,
-    bundle: true,
-    format,
-    logLevel,
-    plugins,
-  };
-  esBuildOptions.plugins = esbuildPlugins;
-  const ctx = await esbuild.context({ ...esBuildOptions });
-  let results = [{ ctx, route }];
-  for (const assert of route.asserts) {
-    const assertPath = assert.path;
-    const targetPath = assert.alias || basename(assertPath);
-    copySync(assertPath, join(outputDir, targetPath), copySyncOption);
-  }
-  for (const subroute of route.subroutes) {
-    results = [
-      ...results,
-      ...(await generateWebsiteWithContext(
-        route.base_route,
-        subroute,
-        jsxImportSource,
-        logLevel,
-        plugins,
-        outputDir,
-        format,
-      )),
-    ];
-  }
-  return results;
-}
 
 async function generateWebsite(
   parent: string | undefined,
   route: Route,
-  jsxImportSource: string | undefined,
-  logLevel: esbuild.LogLevel | undefined,
-  plugins: esbuild.Plugin[],
   targetDir: string,
-  format: esBuildFormat,
-): Promise<esBuildResultInfo[]> {
+  format: Deno.bundle.Format,
+): Promise<BundleResultInfo[]> {
   let outputDir = targetDir;
   if (route.base_route) {
     let subdir = route.base_route;
@@ -617,7 +476,7 @@ async function generateWebsite(
     const reloadJs = join(outputDir, "hot_reload.js");
     Deno.writeTextFile(reloadJs, hotReloadScript);
   }
-  const entryPoints = route.webpages.map((webpage) => webpage.entryPoint);
+  const entrypoints = route.webpages.map((webpage) => webpage.entryPoint);
   for (const unit of route.webpages) {
     if (!unit.onlyJavaScript) {
       const html = unit.htmlName!;
@@ -626,18 +485,14 @@ async function generateWebsite(
       Deno.writeTextFile(htmlPath, text);
     }
   }
-  const esBuildOptions: esbuild.BuildOptions = {
-    entryPoints,
-    jsxImportSource,
-    jsx: "automatic",
-    outdir: outputDir,
-    bundle: true,
+
+  const result = await Deno.bundle({
+    entrypoints,
+    outputDir,
+    platform: "browser",
+    minify: true,
     format,
-    logLevel,
-    plugins,
-  };
-  esBuildOptions.plugins = esbuildPlugins;
-  const result = await esbuild.build({ ...esBuildOptions });
+  });
   let results = [{ result, route }];
   for (const assert of route.asserts) {
     const assertPath = assert.path;
@@ -650,9 +505,6 @@ async function generateWebsite(
       ...(await generateWebsite(
         route.base_route,
         subroute,
-        jsxImportSource,
-        logLevel,
-        plugins,
         targetDir,
         format,
       )),

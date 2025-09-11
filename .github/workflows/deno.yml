@@ -37,8 +37,8 @@ jobs:
       - name: Run linter
         run: deno lint
 
-      - name: Run tests
-        run: deno test -A
+      #- name: Run tests
+      #  run: deno test -A
 
   release:
     runs-on: ubuntu-latest

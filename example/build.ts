@@ -81,9 +81,7 @@ const route = new Route()
   )
   .withHotReload(true)
   .appendRoute(route_2);
-const webgen = new GenWebsite()
-  .withLogLevel("info")
-  .withImportSource("npm:preact");
+const webgen = new GenWebsite();
 
 await webgen.generateWebsite(route);
 
