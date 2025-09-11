@@ -12,10 +12,10 @@
   "license": "MIT",
   "imports": {
     "@luca/esbuild-deno-loader": "jsr:@luca/esbuild-deno-loader@^0.11.1",
-    "@std/assert": "jsr:@std/assert@^1.0.11",
-    "@std/async": "jsr:@std/async@^1.0.10",
-    "@std/fs": "jsr:@std/fs@^1.0.11",
-    "@std/path": "jsr:@std/path@^1.0.8",
+    "@std/assert": "jsr:@std/assert@^1.0.14",
+    "@std/async": "jsr:@std/async@^1.0.14",
+    "@std/fs": "jsr:@std/fs@^1.0.19",
+    "@std/path": "jsr:@std/path@^1.1.2",
     "esbuild": "npm:esbuild@^0.25.0"
   },
   "compilerOptions": {
