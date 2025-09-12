@@ -1,3 +1,4 @@
+/// <reference lib="deno.unstable"/>
 /**
  * @module
  * tananoni is a simple website generator with esbuild
