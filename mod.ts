@@ -423,7 +423,6 @@ const baseTargetDir = "dist";
  * GenWebsite class, directly wrap the esbuild
  */
 export class GenWebsite {
-  jsxImportSource?: string | undefined;
   targetBaseDir: string = baseTargetDir;
   private format_: Deno.bundle.Format = "esm";
 
