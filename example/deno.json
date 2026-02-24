@@ -1,13 +1,12 @@
 {
   "imports": {
-    "@std/async": "jsr:@std/async@^1.0.12",
-    "@std/cli": "jsr:@std/cli@^1.0.15",
-    "@std/fs": "jsr:@std/fs@^1.0.15",
-    "@std/http": "jsr:@std/http@^1.0.13",
-    "@std/path": "jsr:@std/path@^1.0.2",
-    "preact": "npm:preact@^10.26.4",
-    "react": "npm:react@^19.0.0",
-    "styled-components-deno": "jsr:@nobody/styled-components-deno@^0.10.2",
+    "@std/async": "jsr:@std/async@^1.2.0",
+    "@std/cli": "jsr:@std/cli@^1.0.28",
+    "@std/fs": "jsr:@std/fs@^1.0.23",
+    "@std/http": "jsr:@std/http@^1.0.25",
+    "@std/path": "jsr:@std/path@^1.1.4",
+    "preact": "npm:preact@^10.28.4",
+    "styled-components-deno": "jsr:@nobody/styled-components-deno@^0.11.2",
     "~/functions/": "./functions/"
   },
   "tasks": {
